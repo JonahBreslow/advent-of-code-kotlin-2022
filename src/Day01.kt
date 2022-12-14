@@ -1,17 +1,50 @@
+import java.io.File
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+
+    fun  readFile(file_path: String) : List<String> {
+        val text = File(file_path).readLines()
+        return text
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    fun create_elves_calories(input: List<String>): List<Int>{
+        var calories = mutableListOf<Int>()
+        var counter:Int = 0
+        for (food in input){
+            when(food){
+                "" -> {
+                    calories.add(counter)
+                    counter = 0
+                }
+                else -> {
+                    counter += food.toInt()
+                }
+            }
+        }
+        return calories
+    }
+
+    fun get_max_calories(input: List<Int>, n_elves: Int): Int {
+        val sorted_elves = input.sortedDescending()
+        val res = sorted_elves.take(n_elves)
+        return res.sum()
+    }
+
+    fun part1(input: String): Int {
+        val text =  readFile(input)
+        val elfList = create_elves_calories(text)
+        return get_max_calories(elfList, n_elves=1)
+    }
+
+    fun part2(input: String): Int {
+        val text =  readFile(input)
+        val elfList = create_elves_calories(text)
+        return get_max_calories(elfList, n_elves=3)
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    check(part1("data/day1_test.txt") == 24000)
 
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+    println(part1("data/day1.txt"))
+    println(part2("data/day1.txt"))
 }
