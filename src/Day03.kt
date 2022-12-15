@@ -1,5 +1,15 @@
 import java.io.File
 
+val Char.priority: Int
+        get(): Int {
+            return when (this){
+                in 'a'..'z' -> this -'a' + 1
+                in 'A'..'Z' -> this - 'A' + 27
+                else -> error("Check your input! $this")
+            }
+        }
+
+
 fun main () {
 
     fun parseInput(input: String): ArrayList<Pair<String, String>> {
@@ -14,26 +24,6 @@ fun main () {
         return parsed
     }
 
-    fun buildMap () : Map<Char, Int> {
-        var map: Map<Char, Int> = mapOf()
-        var key: Char = 'a'
-        var value: Int = 1
-        while ( key <= 'z'){
-            map += Pair(key, value)
-            ++key
-            ++value
-        }
-        key = 'A'
-        while ( key <= 'Z'){
-            map += Pair(key, value)
-            ++key
-            ++value
-        }
-        return map
-    }
-
-    val map = buildMap()
-
     fun part1(input: String): Int {
         val knapsacks = parseInput(input)
         var res: Int = 0
@@ -41,7 +31,7 @@ fun main () {
             var f = pack.first.toSet()
             var b = pack.second.toSet()
             var item = (f intersect b).first()
-            res += map.getValue(item)
+            res += item.priority
         }
         
         return res
@@ -58,7 +48,7 @@ fun main () {
 
             if (iter % 3 == 2){
                 val common = (allItems[0] intersect allItems[1] intersect allItems[2]).first()
-                res += map.getValue(common)
+                res += common.priority
                 allItems = mutableListOf()
             }
             ++iter
